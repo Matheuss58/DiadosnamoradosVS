@@ -23,37 +23,22 @@ const STATE = {
 
 // Áudio
 const AUDIO = {
-  sources: [
-    'https://github.com/Matheuss58/audios/raw/refs/heads/main/0610.MP3',
-    'https://assets.codepen.io/4515922/simple-piano-melody.mp3'
-  ],
-  player: new Audio(),
-  currentSourceIndex: 0,
+  player: new Audio('./audio/my-love-mine-all-mine.mp3'),
+  
   init() {
     this.player.volume = CONFIG.audioVolume;
-    this.preloadAudio();
+    this.player.loop = true;
   },
-  preloadAudio() {
-    this.sources.forEach(src => {
-      const audio = new Audio();
-      audio.src = src;
-      audio.load();
-    });
-  },
+
   async tryPlay() {
     if (!STATE.audioEnabled) return;
-    
-    this.player.src = this.sources[this.currentSourceIndex];
     try {
       await this.player.play();
-    } catch(e) {
-      console.error('Erro com fonte de áudio', e);
-      this.currentSourceIndex++;
-      if (this.currentSourceIndex < this.sources.length) {
-        setTimeout(() => this.tryPlay(), 500);
-      }
+    } catch (e) {
+      console.warn('Interação do usuário necessária para tocar o áudio');
     }
   },
+
   toggleMute() {
     STATE.audioEnabled = !STATE.audioEnabled;
     this.player.muted = !STATE.audioEnabled;
